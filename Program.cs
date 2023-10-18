@@ -60,6 +60,9 @@ namespace PicsWebApp
                 app.UseHsts();
             }
 
+            var db = app.Services.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>();
+            db.Database.MigrateAsync();
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
