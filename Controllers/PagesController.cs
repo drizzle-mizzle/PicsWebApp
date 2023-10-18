@@ -32,7 +32,7 @@ namespace PicsWebApp.Controllers
         /// Страничка пользователя
         /// </summary>
         [HttpGet]
-        public IActionResult UserProfile(ulong id, string? message = null)
+        public IActionResult UserProfile(ulong id, string? message = null, string? token = null)
         {
             var currentUser = this.TryToAuthorizeUser();
             if (currentUser is null)
@@ -48,6 +48,9 @@ namespace PicsWebApp.Controllers
             ViewBag.IsMyPage = isMyPage;
             ViewBag.Message = message;
             ViewBag.ImagesDir = $"/{_configuration["ImagesRelPath"]}";
+
+            if (token is not null)
+                Response.Headers.Add("Authorization", token);
 
             return View("UserProfile", pageOwnerUser);
         }

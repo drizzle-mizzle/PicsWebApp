@@ -77,7 +77,7 @@ namespace PicsWebApp.Controllers.Api
             Response.Cookies.Append("token", token);
             Response.Cookies.Append("userId", $"{authUser.Id}");
 
-            return RedirectToAction("UserProfile", "Pages", new { id = authUser.Id });
+            return RedirectToAction("UserProfile", "Pages", new { id = authUser.Id, token });
         }
 
         /// <summary>
