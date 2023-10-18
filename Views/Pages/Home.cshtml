@@ -1,0 +1,24 @@
+﻿@using PicsWebApp.Models.Database;
+@model IEnumerable<User>
+@{
+    
+}
+
+<section class="jumbotron text-center">
+    <div class="container">
+        <h1 class="jumbotron-heading">Пользователи</h1>
+
+        <hr>
+        
+        @foreach (var user in Model)
+        {
+            <a style="padding: 5px 10px; color: black;" href="/user/@user.Id">
+                @user.Login
+            </a>
+            @if (@user.Id != Model.Last().Id)
+            {
+                @:|
+            }
+        }
+    </div>
+</section>

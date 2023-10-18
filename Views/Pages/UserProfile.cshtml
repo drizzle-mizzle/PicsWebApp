@@ -1,0 +1,145 @@
+﻿@using PicsWebApp.Data;
+@using PicsWebApp.Models.Database;
+@model User
+
+@{
+    var friendRequests = Model.GetIncomingFriendshipRequests();
+}
+
+<section class="jumbotron text-center">
+    <div class="container">
+        <h1 class="jumbotron-heading">@Model.Login</h1>
+
+        @if (ViewBag.IsNotMyFriend)
+        {
+            <form method="post" action="/api/friendship/create">
+                <input name="proposerId" style="display:none" value="@Context.Request.Cookies["userId"]">
+                <input name="receiverId" style="display:none" value="@Model.Id">
+                <button type="submit" class="btn btn-primary" style="margin-top:15px">Добавить в друзья</button>
+            </form>
+        }
+        else if (!ViewBag.IsMyPage)
+        {
+            <form method="post" action="/api/friendship/delete">
+                <input name="proposerId" style="display:none" value="@Context.Request.Cookies["userId"]">
+                <input name="receiverId" style="display:none" value="@Model.Id">
+                <button type="submit" class="btn btn-primary" style="margin-top:15px">Удалить из друзей</button>
+            </form>
+        }
+        else if (friendRequests.Any())
+        {
+            <p>Запросы в друзья (@friendRequests.Count)</p>
+            <div class="friend-requests">
+
+                @foreach (var req in friendRequests)
+                {
+                    <div class="friend-request-item">
+                        @req.Proposer.Login
+                        <div style="display:flex;">
+                            <form method="post" action="/api/friendship/accept">
+                                <input name="id" style="display:none" value="@req.Id">
+                                <button type="submit" class="mini-btn accept-btn">✅</button>
+                            </form>
+                            <form method="post" action="/api/friendship/decline">
+                                <input name="id" style="display:none" value="@req.Id">
+                                <button type="submit" class="mini-btn decline-btn">X</button>
+                            </form>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+        <hr style="width: 90%;" />
+
+        @if (ViewBag.IsMyPage)
+        {
+            @ViewBag.Message
+            <form method="post" enctype="multipart/form-data" action="/api/user/upload" class="image-upload-form">
+                <input id="file-upload" name="file" type="file">
+                <input type="submit" class="btn btn-primary my-2" value="Загрузить изображение" style="margin-top:15px;" />
+            </form>
+        }
+
+        @if (ViewBag.CanSeeImages)
+        {
+            <div class="gallery">
+                @foreach (var image in Model.Images)
+                {
+                    <img runat="server" src="@ViewBag.ImagesDir/@image.FileName" />
+                }
+            </div>
+        }
+        else
+        {
+            <p style="font-size:24pt">Вы не можете просматривать изображения этого пользователя</p>
+        }
+    </div>
+</section>
+
+<style>
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .friend-requests {
+        width: 260px;
+        height: 100px;
+        overflow: scroll;
+        border: 1px solid black;
+        border-radius: 5px;
+        background-color: #e9e9e9;
+        padding: 10px 20px;
+    }
+
+    .friend-request-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14pt;
+    }
+
+    .mini-btn {
+        display: flex;
+        width: 25px;
+        height: 25px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 3px;
+        color: white;
+    }
+
+    .accept-btn {
+        background-color: limegreen;
+    }
+
+    .decline-btn {
+        background-color: red;
+    }
+
+    .image-upload-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border-radius: 12px;
+        padding: 10px;
+        margin: 5px 0 20px 0;
+        max-width: 360px;
+        background-color: #e9e9e9;
+    }
+
+    .gallery {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    img {
+        object-fit: cover;
+        width: 180px;
+        height: 180px;
+        padding: 3px;
+    }
+</style>
