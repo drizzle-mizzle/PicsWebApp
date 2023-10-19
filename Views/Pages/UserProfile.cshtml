@@ -10,7 +10,7 @@
     <div class="container">
         <h1 class="jumbotron-heading">@Model.Login</h1>
 
-        @if (ViewBag.IsNotMyFriend)
+        @if (!ViewBag.IsMyFriend)
         {
             <form method="post" action="/api/friendship/create">
                 <input name="proposerId" style="display:none" value="@Context.Request.Cookies["userId"]">
@@ -61,7 +61,7 @@
             </form>
         }
 
-        @if (ViewBag.CanSeeImages)
+        @if (ViewBag.ImHisFriend)
         {
             <div class="gallery">
                 @foreach (var image in Model.Images)

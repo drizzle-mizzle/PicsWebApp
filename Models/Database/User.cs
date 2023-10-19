@@ -29,7 +29,7 @@ namespace PicsWebApp.Models.Database
         public List<Friendship> GetIncomingFriendshipRequests()
             => FriendshipsInc.Where(f => f.IsPending).ToList();
 
-        public bool HasUserInFriendlist(User user, AppDbContext db)
-            => db.Friendships.FirstOrDefault(request => request.ProposerId == Id && request.ReceiverId == user.Id) is not null;
+        public bool HasUserInFriendlist(User user)
+            => FriendshipsOut.FirstOrDefault(fs => fs.ReceiverId == user.Id) is not null;
     }
 }

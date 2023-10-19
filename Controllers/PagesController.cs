@@ -43,9 +43,10 @@ namespace PicsWebApp.Controllers
                 return StatusCode(404);
 
             bool isMyPage = pageOwnerUser.Id == currentUser.Id;
-            ViewBag.CanSeeImages = isMyPage || pageOwnerUser.HasUserInFriendlist(currentUser, _db);
-            ViewBag.IsNotMyFriend = !isMyPage && pageOwnerUser.Id != currentUser.Id && !currentUser.HasUserInFriendlist(pageOwnerUser, _db);
+            ViewBag.IsMyFriend = isMyPage || currentUser.HasUserInFriendlist(pageOwnerUser);
+            ViewBag.ImHisFriend = isMyPage || pageOwnerUser.HasUserInFriendlist(currentUser);
             ViewBag.IsMyPage = isMyPage;
+
             ViewBag.Message = message;
             ViewBag.ImagesDir = $"/{_configuration["ImagesRelPath"]}";
 
